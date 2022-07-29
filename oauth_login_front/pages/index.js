@@ -2,6 +2,9 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import { signIn, useSession, signOut } from "next-auth/react";
+import axios from "axios";
+axios.defaults.baseURL = "http://localhost:2000";
+
 export default function Home() {
   const { data, status } = useSession();
   return (
@@ -22,6 +25,21 @@ export default function Home() {
         ) : (
           <button type="button" onClick={() => signIn("google")}>
             Google Login
+          </button>
+        )}
+        {data?.user && (
+          <button
+            type="button"
+            onClick={async () => {
+              const response = await axios.get("users", {
+                headers: {
+                  "x-token": data.accessToken,
+                },
+              });
+              console.log(response.data.result);
+            }}
+          >
+            Users
           </button>
         )}
       </main>

@@ -25,8 +25,20 @@ export class AppController {
   }
 
   @Get('/users')
-  getUsers() {
-    return this.users;
+  getUsers(@Req() req) {
+    try {
+      console.log(Date.now());
+      if (!req.headers['x-token']) new Error('Hreadr Not');
+      const decode = jwt.verify(req.headers['x-token'], '1234');
+      console.log(decode);
+      if (this.users.findIndex((e) => decode.id == e.id) != -1)
+        return this.users;
+      return [];
+    } catch (e) {
+      console.log(e);
+      // new Error('1234');
+      return [];
+    }
   }
   @Post('/oauth/refresh')
   refreshToken(@Body() body) {
@@ -48,6 +60,7 @@ export class AppController {
 
   @Get('/oauth/userInfo/:token')
   MyInfo(@Param('token') token: string) {
+    console.log(token);
     const decode = jwt.verify(token, '1234');
     const findIndex = this.users.findIndex((e) => e.id == decode.id);
     const user = this.users[findIndex];

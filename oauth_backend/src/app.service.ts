@@ -14,9 +14,7 @@ export class AppService {
         id: id,
       },
       '1234',
-      {
-        expiresIn: '3m',
-      },
+      { expiresIn: '9h', algorithm: 'HS512' },
     );
   }
   // * 리플래시 토큰 발급
@@ -27,7 +25,8 @@ export class AppService {
       },
       '1122',
       {
-        expiresIn: '1h',
+        algorithm: 'HS512',
+        expiresIn: '9h',
       },
     );
   }
